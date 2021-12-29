@@ -1,0 +1,19 @@
+name: Hearts
+version: '${project.version}'
+main: com.icurety.hearts.Hearts
+api-version: 1.18
+authors: [ Zakiisak ]
+description: A plugin that can manipulate your heat amount. You have to earn your hp
+commands:
+  setmaxhp:
+    description: sets the max hp of a player. Each whole number is equal to half a heart
+    usage: /<command> <player> <maxhp>
+  sethp:
+    description: sets the hp of a player. Each whole number is equal to half a heart
+    usage: /<command> <player> <hp>
+  saveallmaxhp:
+    description: flushes all max hp data to disk
+    usage: /<command>
+  setlifesteal:
+    description: enables or disables (maxhp) lifesteal between players
+    usage: /<command> <on | off>
