@@ -14,6 +14,12 @@ commands:
   saveallmaxhp:
     description: flushes all max hp data to disk
     usage: /<command>
+  getmaxhp:
+    description: gets the max hp of a speicifed player
+    usage: /<command> <player>
+  upgradehp:
+    description: upgrades the hp of the player at the cost of 30 levels
+    usage: /<command>
   setlifesteal:
     description: enables or disables (maxhp) lifesteal between players
     usage: /<command> <on | off>

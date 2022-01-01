@@ -2,10 +2,14 @@ package com.icurety.hearts;
 
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class CommandSetHp implements CommandExecutor {
 
@@ -22,9 +26,30 @@ public class CommandSetHp implements CommandExecutor {
         player.setHealth(newHp);
     }
 
+    private Player findClosestPlayer(CommandSender sender, Command command) {
+        if(sender instanceof BlockCommandSender)
+        {
+            Block b = ((BlockCommandSender) sender).getBlock();
+            List<Player> players = b.getLocation().getWorld().getPlayers();
+            Player closest = null;
+            double closestDistance = Double.MAX_VALUE;
+            for(Player p : players) {
+                double distance = p.getLocation().distance(b.getLocation());
+                if(distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closest = p;
+                }
+            }
+
+            return closest;
+        }
+        return null;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(sender.isOp())
+        if((sender.isOp() && sender.getName().toLowerCase().equals("zakiisak")) || !(sender instanceof Player))
         {
             if(args.length < 1)
             {
@@ -64,6 +89,14 @@ public class CommandSetHp implements CommandExecutor {
                 }
                 else {
                     String playerName = args[0];
+
+                    if(playerName.startsWith("@p"))
+                    {
+                        Player closest = findClosestPlayer(sender, command);
+                        if(closest != null)
+                            playerName = closest.getName();
+                    }
+
                     Integer newHp = tryParse(args[1]);
                     Player player = sender.getServer().getPlayer(playerName);
                     if(player != null)

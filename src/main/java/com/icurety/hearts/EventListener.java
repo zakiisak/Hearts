@@ -5,8 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+
+import java.util.List;
 
 public class EventListener implements Listener {
 
@@ -27,22 +31,26 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        if(Hearts.isLifeStealEnabled())
-        {
-            //A player killed another player
-            if(event.getEntity() instanceof Player && event.getEntity().getLastDamageCause().getEntity() instanceof Player) {
-                Player killedPlayer = (Player) event.getEntity();
-                Player killer = (Player) event.getEntity().getLastDamageCause().getEntity();
-                int killedMaxHp = MaxHpRegistry.getMaxHpFor(killedPlayer);
-                int killerMaxHp = MaxHpRegistry.getMaxHpFor(killer);
-                //as long as the killed player has at least 1 heart, it will get life stealed
-                if(killedMaxHp > 2) {
-                    MaxHpRegistry.updateMaxHpFor(killedPlayer, killedMaxHp - 2);
-                    MaxHpRegistry.updateMaxHpFor(killer, killerMaxHp + 2);
-                }
+    public void onPlayerDeathEvent(PlayerDeathEvent event) {
+
+        //A player killed another player
+        if(event.getEntity().getKiller() != null) {
+
+            Player killedPlayer = event.getEntity();
+            Player killer = killedPlayer.getKiller();
+            Integer killedMaxHp = MaxHpRegistry.getMaxHpFor(killedPlayer);
+            Integer killerMaxHp = MaxHpRegistry.getMaxHpFor(killer);
+            //as long as the killed player has at least 1 heart, it will get life stealed
+            if(killedMaxHp != null && killerMaxHp != null && killedMaxHp > 2) {
+                MaxHpRegistry.updateMaxHpFor(killedPlayer, killedMaxHp - 2);
+                MaxHpRegistry.updateMaxHpFor(killer, killerMaxHp + 2);
             }
         }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+
     }
 
     @EventHandler
@@ -53,6 +61,14 @@ public class EventListener implements Listener {
             event.getPlayer().setHealth(maxHp);
         }
         System.out.println("updated max hp");
+    }
+
+    @EventHandler
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
+        List<String> lore = event.getItem().getItemMeta().getLore();
+        if(lore != null && lore.size() > 0 && "+1 heart".equals(lore.get(0))) {
+            MaxHpRegistry.updateMaxHpFor(event.getPlayer(), MaxHpRegistry.getMaxHpFor(event.getPlayer()) + 2);
+        }
     }
 
 }

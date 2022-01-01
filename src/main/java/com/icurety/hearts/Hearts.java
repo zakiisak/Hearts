@@ -21,6 +21,8 @@ public final class Hearts extends JavaPlugin {
         this.getCommand("sethp").setExecutor(new CommandSetHp());
         this.getCommand("saveallmaxhp").setExecutor(new CommandSaveAllMaxHp());
         this.getCommand("setlifesteal").setExecutor(new CommandSetLifeSteal());
+        this.getCommand("getmaxhp").setExecutor(new CommandGetMaxHp());
+        this.getCommand("upgradehp").setExecutor(new CommandUpgradeHp());
 
     }
 

@@ -13,9 +13,12 @@ public class MaxHpRegistry {
     private static Map<String, Integer> records = new HashMap<String, Integer>();
 
     //Returns the max hp of the given player id, or null if not found
-    public static Integer getMaxHpFor(Player player)
+    public static int getMaxHpFor(Player player)
     {
-        return records.get(player.getUniqueId().toString());
+        Integer result = records.get(player.getUniqueId().toString());
+        if(result == null)
+            result = (int) player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+        return result;
     }
 
     public static void updateMaxHpFor(Player player, Integer newMaxHp)
