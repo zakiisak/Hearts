@@ -1,6 +1,5 @@
 package com.icurety.hearts;
 
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CommandUpgradeHp implements CommandExecutor {
+public class CommandGiveHeartPiece implements CommandExecutor {
 
     private Integer tryParse(String num) {
         try {
@@ -48,16 +47,10 @@ public class CommandUpgradeHp implements CommandExecutor {
         return null;
     }
 
-    private void addItemToPlayer(Player player)
+    private void addItemToPlayer(Player player, int amount)
     {
-        ItemStack stack = new ItemStack(Material.APPLE, 1);
-        List<String> lore = new ArrayList<String>();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("Heart Container");
-        lore.add("+1 heart");
-        meta.setLore(lore);
-        meta.setCustomModelData(20);
-        stack.setItemMeta(meta);
+        ItemStack stack = Recipes.getHeartPieceItemStack();
+        stack.setAmount(amount);
         HashMap<Integer, ItemStack> overflowingItems = player.getInventory().addItem(stack);
 
         //drop overflowing heart container
@@ -65,49 +58,32 @@ public class CommandUpgradeHp implements CommandExecutor {
         {
             player.getWorld().dropItem(player.getEyeLocation(), overflowingItemStack);
         }
-
-        if(overflowingItems.size() == 0)
-            player.playSound(player.getLocation(), "heart.container.get.sound", 1f, 1f);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length > 0)
-        {
-            String playerName = args[0];
-            Player player = sender.getServer().getPlayer(playerName);
-            if(player != null)
-            {
-                addItemToPlayer(player);
-            }
-            else sender.sendMessage("That player isn't logged on to the server");
-        }
-        else {
+        if(sender.isOp()) {
+            if (args.length < 1) {
+                return false;
+            } else if (args.length == 2) {
+                String playerName = args[0];
 
-            if(sender instanceof BlockCommandSender)
-            {
-                Player player = findClosestPlayer(sender, command);
-                if(player != null) {
-                    if(player.getLevel() >= 30 || player.getGameMode() == GameMode.CREATIVE)
-                    {
-                        player.setLevel(player.getLevel() - 30);
-                        addItemToPlayer(player);
-                    }
+                if (playerName.startsWith("@p")) {
+                    Player closest = findClosestPlayer(sender, command);
+                    if (closest != null)
+                        playerName = closest.getName();
                 }
-            }
-            else if(sender instanceof Player)
-            {
-                Player player = (Player) sender;
-                if(player.getLevel() >= 30)
-                {
-                    player.setLevel(player.getLevel() - 30);
-                    addItemToPlayer(player);
-                }
-                else {
-                    sender.sendMessage("You do not have 30 levels");
-                }
-            }
+
+                Player player = sender.getServer().getPlayer(playerName);
+                if (player != null) {
+                    Integer amount = tryParse(args[1]);
+                    if (amount != null) {
+                        addItemToPlayer(player, amount);
+                    } else sender.sendMessage("The amount must be a whole number");
+                } else sender.sendMessage("That player isn't on the server");
+                return true;
+            } else return false;
         }
-        return true;
+        else sender.sendMessage("You aren't authorized to give heart pieces");
     }
 }

@@ -19,7 +19,10 @@ commands:
     usage: /<command> <player>
   upgradehp:
     description: upgrades the hp of the player at the cost of 30 levels
-    usage: /<command>
+    usage: /<command> [player]
+  give_heart_piece:
+    description: Gives a heart piece to the specified player
+    usage: /<command> <player> <amount>
   setlifesteal:
     description: enables or disables (maxhp) lifesteal between players
     usage: /<command> <on | off>

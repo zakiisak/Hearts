@@ -29,7 +29,7 @@ public class LoadHandler {
     }
 
     private static void loadLifeSteal() {
-        List<String> lines = getConfig(SaveHandler.MAXHP_CONFIG);
+        List<String> lines = getConfig(SaveSystem.MAXHP_CONFIG);
         if(lines != null) {
             boolean lifeStealEnabled = false;
             try {
@@ -44,7 +44,7 @@ public class LoadHandler {
     }
 
     private static void loadMaxHpRegistry() {
-        List<String> lines = getConfig(SaveHandler.MAXHP_CONFIG);
+        List<String> lines = getConfig(SaveSystem.MAXHP_CONFIG);
         if(lines != null) {
             Map<String, Integer> maxHps = new HashMap<String, Integer>();
             try {

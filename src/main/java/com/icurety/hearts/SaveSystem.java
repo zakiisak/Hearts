@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
-public class SaveHandler {
+public class SaveSystem {
 
     public static final String MAXHP_CONFIG = "players.txt";
     public static final String LIFESTEAL_CONFIG = "lifesteal.txt";
@@ -43,7 +43,7 @@ public class SaveHandler {
 
         for(String id : records.keySet()) {
             Integer maxHp = records.get(id);
-            output += id + " " + maxHp;
+            output += id + " " + maxHp + "\n";
         }
         saveConfig(MAXHP_CONFIG, output);
     }

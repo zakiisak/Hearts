@@ -10,7 +10,7 @@ public class CommandSaveAllMaxHp implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender.isOp())
         {
-            SaveHandler.save();
+            SaveSystem.save();
             sender.sendMessage("Done.");
         }
         else sender.sendMessage("You are not authorized to use this command");

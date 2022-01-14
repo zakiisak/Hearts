@@ -14,6 +14,7 @@ public final class Hearts extends JavaPlugin {
     @Override
     public void onEnable() {
         LoadHandler.load();
+        Recipes.load(this);
         // Plugin startup logic
         this.getServer().getPluginManager().registerEvents(new EventListener(), this);
 
@@ -23,13 +24,13 @@ public final class Hearts extends JavaPlugin {
         this.getCommand("setlifesteal").setExecutor(new CommandSetLifeSteal());
         this.getCommand("getmaxhp").setExecutor(new CommandGetMaxHp());
         this.getCommand("upgradehp").setExecutor(new CommandUpgradeHp());
-
+        this.getCommand("give_heart_piece").setExecutor(new CommandGiveHeartPiece());
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        SaveHandler.save();
+        SaveSystem.save();
     }
 
     public static boolean isLifeStealEnabled() {
