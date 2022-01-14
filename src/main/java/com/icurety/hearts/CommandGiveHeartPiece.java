@@ -87,7 +87,7 @@ public class CommandGiveHeartPiece implements CommandExecutor {
         else
         {
             sender.sendMessage("You aren't authorized to give heart pieces");
-            return false;
+            return true;
         }
     }
 }
