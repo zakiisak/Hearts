@@ -85,7 +85,7 @@ public class EventListener implements Listener {
                 }
                 Creeper e;
 
-                if(event.getEntity() instanceof Monster && random.nextInt(30) == 5)
+                if(event.getEntity() instanceof Monster && random.nextInt(100) == 5)
                 {
                     event.getDrops().add(Recipes.getHeartPieceItemStack());
                 }
@@ -97,7 +97,7 @@ public class EventListener implements Listener {
     public void onCraftItemEvent(CraftItemEvent event)
     {
         if(event.getCurrentItem() != null && event.getCurrentItem().getType().equals(Material.APPLE)
-                && event.getCurrentItem().getItemMeta().getCustomModelData() == 20)
+                && event.getCurrentItem().getItemMeta().hasCustomModelData() && event.getCurrentItem().getItemMeta().getCustomModelData() == 20)
         {
             if(event.getWhoClicked() instanceof Player)
             {
@@ -111,11 +111,11 @@ public class EventListener implements Listener {
     public void onItemDespawn(ItemDespawnEvent event)
     {
         ItemStack stack = event.getEntity().getItemStack();
-        if(stack.getType().equals(Material.APPLE) && stack.getItemMeta().getCustomModelData() == 20)
+        if(stack.getType().equals(Material.APPLE) && stack.getItemMeta().hasCustomModelData() && stack.getItemMeta().getCustomModelData() == 20)
         {
             event.setCancelled(true);
         }
-        else if(stack.getType().equals(Material.FEATHER) && stack.getItemMeta().getCustomModelData() == 19)
+        else if(stack.getType().equals(Material.FEATHER) && stack.getItemMeta().hasCustomModelData() &&  stack.getItemMeta().getCustomModelData() == 19)
         {
             event.setCancelled(true);
         }
@@ -126,7 +126,7 @@ public class EventListener implements Listener {
         ItemStack stack = event.getItem().getItemStack();
 
         //This means, it's a heart
-        if(stack.getType().equals(Material.APPLE))
+        if(stack.getType().equals(Material.APPLE) && stack.getItemMeta().hasCustomModelData())
         {
             if(stack.getItemMeta().getCustomModelData() == 20)
             {
@@ -156,7 +156,7 @@ public class EventListener implements Listener {
                 }
             }
         }
-        else if(stack.getType().equals(Material.FEATHER) && stack.getItemMeta().getCustomModelData() == 19)
+        else if(stack.getType().equals(Material.FEATHER) && stack.getItemMeta().hasCustomModelData() && stack.getItemMeta().getCustomModelData() == 19)
         {
             if(event.getEntity() instanceof Player)
             {
@@ -178,9 +178,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
-        List<String> lore = event.getItem().getItemMeta().getLore();
-        System.out.println("Custom Model Data: " + event.getItem().getItemMeta().getCustomModelData());
-        if(event.getItem().getItemMeta().getCustomModelData() == 20) {
+        if(event.getItem().getItemMeta().hasCustomModelData() && event.getItem().getItemMeta().getCustomModelData() == 20) {
             event.getPlayer().playSound(event.getPlayer().getLocation(), "heart.container.sound", 1f, 1f);
             MaxHpRegistry.updateMaxHpFor(event.getPlayer(), MaxHpRegistry.getMaxHpFor(event.getPlayer()) + 2);
         }
